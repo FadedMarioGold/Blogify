@@ -1,0 +1,30 @@
+{% extends "blog/base.html" %}
+{% block content %}
+    {% for i in posts %}
+    <article class="media content-section">
+      <img src="{{i.author.profile.image.url}}" alt="profile-pic" class="rounded-circle article-img" >
+        <div class="media-body">
+          <div class="article-metadata">
+            <a class="mr-2" href="{% url 'user-posts' i.author.username%}">{{i.author }}</a>
+            <small class="text-muted">{{ i.date_posted|date:"F d, Y" }}</small>
+          </div>
+          <h2><a class="article-title" href="{% url 'post-detail' pk=i.id%}">{{i.title }}</a></h2>
+          <p class="article-content">{{ i.content }}</p>
+        </div>
+      </article>
+    {% endfor %}
+
+    {% if is_paginated %}
+     {% if page_obj.has_preivous%}
+      <a class="btn btn--outline-info mb-4" href="?page=1">First</a>
+      <a class="btn btn--outline-info mb-4" href="?page={{page_obj.previous_page_number}}">Previous</a>
+     {% endif %}
+    {%endif%}
+    {% for num in page_obj.paginator.page_range %}
+      {% if page_obj.number == num%}
+      <a class="btn btn-info mb-4" href="?page={{num}}">{{num}}</a>
+      {%else%}
+      <a class="btn btn--outline-info mb-4" href="?page={{num}}">{{num}}</a>
+      {%endif%}
+    {%endfor%}
+{% endblock %}
